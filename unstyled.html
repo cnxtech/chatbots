@@ -12,7 +12,73 @@
 </ol>
 <hr />
 <h1 id="json">JSON</h1>
-<p>Text</p>
+<p>&quot;JSON&quot; is an acronym used to describe JavaScript Object Notation. This is essentially a format for transmitting data in the form of &quot;objects&quot; (think object-oriented programming). The notation is very similar to Python's syntax for dictionaries. Generally, JSON objects can be thought of as a text form of dictionaries.</p>
+<p>Here is an example of a JSON object:</p>
+<pre><code>{
+  &quot;firstName&quot;: &quot;John&quot;,
+  &quot;lastName&quot;: &quot;Smith&quot;,
+  &quot;isAlive&quot;: true,
+  &quot;age&quot;: 27,
+  &quot;address&quot;: {
+    &quot;streetAddress&quot;: &quot;21 2nd Street&quot;,
+    &quot;city&quot;: &quot;New York&quot;,
+    &quot;state&quot;: &quot;NY&quot;,
+    &quot;postalCode&quot;: &quot;10021-3100&quot;
+  },
+  &quot;phoneNumbers&quot;: [
+    {
+      &quot;type&quot;: &quot;home&quot;,
+      &quot;number&quot;: &quot;212 555-1234&quot;
+    },
+    {
+      &quot;type&quot;: &quot;office&quot;,
+      &quot;number&quot;: &quot;646 555-4567&quot;
+    },
+    {
+      &quot;type&quot;: &quot;mobile&quot;,
+      &quot;number&quot;: &quot;123 456-7890&quot;
+    }
+  ],
+  &quot;children&quot;: [],
+  &quot;spouse&quot;: null
+} </code></pre>
+<p>Parsing text formatted as JSON objects is very easy in Python. Using the <code>json</code> library, and calling the <code>json.loads</code> method on a properly-formatted string will return a regular Python dictionary.</p>
+<p>Assuming that the above text is stored as <code>jsonString</code>, we can do the following to turn it into a dictionary in Python:</p>
+<pre><code>import json
+
+jsonDict = json.loads(jsonString)
+
+# Prints: 27
+print(jsonDict[&quot;age&quot;])
+
+# Prints: 3
+print(len(jsonDict[&quot;phoneNumbers&quot;]))
+
+# Prints: dict
+print(type(jsonDict[&quot;address&quot;]))</code></pre>
+<p>In order to create JSON text strings from Python dictionaries, we can use the <code>json.dumps</code> method. Calling this method will return a properly-formatted JSON string assuming that each item in the dictionary is well-formed. If you are working with custom objects, you will need to tell the <code>json</code> library how to turn those objects in to <code>json</code> strings.</p>
+<p>Additionally, the <code>indent</code> optional parameter to the <code>json.dumps</code> method is very useful for printing and debugging JSON strings. This allows the output string to be formatted nicely. The <code>indent</code> parameter is an integer representing the number of spaces to indent each successive nested layer of the dictionary. Typical values are 2 or 4.</p>
+<p>Here is an example of modifying some values from the JSON string above and returning the modified JSON string:</p>
+<pre><code>import json
+
+jsonDict = json.loads(jsonString)
+
+# Change the age
+jsonDict[&quot;age&quot;] = 69
+
+# Add children
+jsonDict[&quot;children&quot;].append(&quot;Kiddo1&quot;)
+jsonDict[&quot;children&quot;].append(&quot;Little Boi&quot;)
+
+# Add a field
+jsonDict[&quot;favNumber&quot;] = 420
+
+# Modify the address
+jsonDict[&quot;address&quot;][&quot;postalCode&quot;] = &quot;15213&quot;
+
+# Get a nicely formatted JSON string
+newJsonString = json.dumps(jsonDict, indent=2)
+print(newJsonString)</code></pre>
 <h1 id="apis">APIs</h1>
 <p>Text</p>
 <h1 id="groupme-bot-api">GroupMe Bot API</h1>
