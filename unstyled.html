@@ -2,7 +2,7 @@
 <h2 id="optional-lecture">15-112 Optional Lecture</h2>
 <p>By: <a href="http://jstrieb.github.io">Jacob Strieb</a> and <a href="https://www.zuhayer.me/">Zuhayer Quazi</a></p>
 <p>Published on November 6, 2018</p>
-<h3 id="sections">Sections</h3>
+<h2 id="sections">Sections</h2>
 <ol style="list-style-type: decimal">
 <li><a href="#json">JSON</a></li>
 <li><a href="#apis">APIs</a></li>
@@ -79,8 +79,47 @@ jsonDict[&quot;address&quot;][&quot;postalCode&quot;] = &quot;15213&quot;
 # Get a nicely formatted JSON string
 newJsonString = json.dumps(jsonDict, indent=2)
 print(newJsonString)</code></pre>
+<p>Running this code prints the following:</p>
+<pre><code>{
+  &quot;firstName&quot;: &quot;John&quot;,
+  &quot;lastName&quot;: &quot;Smith&quot;,
+  &quot;isAlive&quot;: true,
+  &quot;age&quot;: 69,
+  &quot;address&quot;: {
+    &quot;streetAddress&quot;: &quot;21 2nd Street&quot;,
+    &quot;city&quot;: &quot;New York&quot;,
+    &quot;state&quot;: &quot;NY&quot;,
+    &quot;postalCode&quot;: &quot;15213&quot;
+  },
+  &quot;phoneNumbers&quot;: [
+    {
+      &quot;type&quot;: &quot;home&quot;,
+      &quot;number&quot;: &quot;212 555-1234&quot;
+    },
+    {
+      &quot;type&quot;: &quot;office&quot;,
+      &quot;number&quot;: &quot;646 555-4567&quot;
+    },
+    {
+      &quot;type&quot;: &quot;mobile&quot;,
+      &quot;number&quot;: &quot;123 456-7890&quot;
+    }
+  ],
+  &quot;children&quot;: [
+    &quot;Kiddo1&quot;,
+    &quot;Little Boi&quot;
+  ],
+  &quot;spouse&quot;: null,
+  &quot;favNumber&quot;: 420
+}</code></pre>
+<p>More information about JSON can be found at the following links:</p>
+<ul>
+<li><a href="https://docs.python.org/3/library/json.html">Python JSON Documentation</a></li>
+<li><a href="https://www.json.org/">Official JSON Standard Website</a></li>
+<li><a href="https://en.wikipedia.org/wiki/JSON">JSON Wikipedia Page</a></li>
+</ul>
 <h1 id="apis">APIs</h1>
-<p>Text</p>
+<p>&quot;API&quot; is an acronym that stands for Application Programming Interface.</p>
 <h1 id="groupme-bot-api">GroupMe Bot API</h1>
 <p>Text</p>
 <h1 id="facebook-messenger-bot-api">Facebook Messenger Bot API</h1>

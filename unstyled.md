@@ -6,7 +6,7 @@ By: [Jacob Strieb](http://jstrieb.github.io) and [Zuhayer Quazi](https://www.zuh
 
 Published on November 6, 2018
 
-### Sections
+## Sections
 1. [JSON](#json)
 2. [APIs](#apis)
 3. [GroupMe Bot API](#groupme-bot-api)
@@ -96,8 +96,50 @@ newJsonString = json.dumps(jsonDict, indent=2)
 print(newJsonString)
 ```
 
+Running this code prints the following:
+```
+{
+  "firstName": "John",
+  "lastName": "Smith",
+  "isAlive": true,
+  "age": 69,
+  "address": {
+    "streetAddress": "21 2nd Street",
+    "city": "New York",
+    "state": "NY",
+    "postalCode": "15213"
+  },
+  "phoneNumbers": [
+    {
+      "type": "home",
+      "number": "212 555-1234"
+    },
+    {
+      "type": "office",
+      "number": "646 555-4567"
+    },
+    {
+      "type": "mobile",
+      "number": "123 456-7890"
+    }
+  ],
+  "children": [
+    "Kiddo1",
+    "Little Boi"
+  ],
+  "spouse": null,
+  "favNumber": 420
+}
+```
+
+More information about JSON can be found at the following links:
+
+- [Python JSON Documentation](https://docs.python.org/3/library/json.html)
+- [Official JSON Standard Website](https://www.json.org/)
+- [JSON Wikipedia Page](https://en.wikipedia.org/wiki/JSON)
+
 # APIs
-Text
+"API" is an acronym that stands for Application Programming Interface. 
 
 # GroupMe Bot API
 Text
