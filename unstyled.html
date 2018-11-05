@@ -14,104 +14,104 @@
 <h1 id="json">JSON</h1>
 <p>&quot;JSON&quot; is an acronym used to describe JavaScript Object Notation. This is essentially a format for transmitting data in the form of &quot;objects&quot; (think object-oriented programming). The notation is very similar to Python's syntax for dictionaries. Generally, JSON objects can be thought of as a text form of dictionaries.</p>
 <p>Here is an example of a JSON object:</p>
-<pre><code>{
-  &quot;firstName&quot;: &quot;John&quot;,
-  &quot;lastName&quot;: &quot;Smith&quot;,
-  &quot;isAlive&quot;: true,
-  &quot;age&quot;: 27,
-  &quot;address&quot;: {
-    &quot;streetAddress&quot;: &quot;21 2nd Street&quot;,
-    &quot;city&quot;: &quot;New York&quot;,
-    &quot;state&quot;: &quot;NY&quot;,
-    &quot;postalCode&quot;: &quot;10021-3100&quot;
-  },
-  &quot;phoneNumbers&quot;: [
-    {
-      &quot;type&quot;: &quot;home&quot;,
-      &quot;number&quot;: &quot;212 555-1234&quot;
-    },
-    {
-      &quot;type&quot;: &quot;office&quot;,
-      &quot;number&quot;: &quot;646 555-4567&quot;
-    },
-    {
-      &quot;type&quot;: &quot;mobile&quot;,
-      &quot;number&quot;: &quot;123 456-7890&quot;
-    }
-  ],
-  &quot;children&quot;: [],
-  &quot;spouse&quot;: null
-} </code></pre>
+<div class="sourceCode"><pre class="sourceCode json"><code class="sourceCode json"><span class="fu">{</span>
+  <span class="dt">&quot;firstName&quot;</span><span class="fu">:</span> <span class="st">&quot;John&quot;</span><span class="fu">,</span>
+  <span class="dt">&quot;lastName&quot;</span><span class="fu">:</span> <span class="st">&quot;Smith&quot;</span><span class="fu">,</span>
+  <span class="dt">&quot;isAlive&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span>
+  <span class="dt">&quot;age&quot;</span><span class="fu">:</span> <span class="dv">27</span><span class="fu">,</span>
+  <span class="dt">&quot;address&quot;</span><span class="fu">:</span> <span class="fu">{</span>
+    <span class="dt">&quot;streetAddress&quot;</span><span class="fu">:</span> <span class="st">&quot;21 2nd Street&quot;</span><span class="fu">,</span>
+    <span class="dt">&quot;city&quot;</span><span class="fu">:</span> <span class="st">&quot;New York&quot;</span><span class="fu">,</span>
+    <span class="dt">&quot;state&quot;</span><span class="fu">:</span> <span class="st">&quot;NY&quot;</span><span class="fu">,</span>
+    <span class="dt">&quot;postalCode&quot;</span><span class="fu">:</span> <span class="st">&quot;10021-3100&quot;</span>
+  <span class="fu">},</span>
+  <span class="dt">&quot;phoneNumbers&quot;</span><span class="fu">:</span> <span class="ot">[</span>
+    <span class="fu">{</span>
+      <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;home&quot;</span><span class="fu">,</span>
+      <span class="dt">&quot;number&quot;</span><span class="fu">:</span> <span class="st">&quot;212 555-1234&quot;</span>
+    <span class="fu">}</span><span class="ot">,</span>
+    <span class="fu">{</span>
+      <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;office&quot;</span><span class="fu">,</span>
+      <span class="dt">&quot;number&quot;</span><span class="fu">:</span> <span class="st">&quot;646 555-4567&quot;</span>
+    <span class="fu">}</span><span class="ot">,</span>
+    <span class="fu">{</span>
+      <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;mobile&quot;</span><span class="fu">,</span>
+      <span class="dt">&quot;number&quot;</span><span class="fu">:</span> <span class="st">&quot;123 456-7890&quot;</span>
+    <span class="fu">}</span>
+  <span class="ot">]</span><span class="fu">,</span>
+  <span class="dt">&quot;children&quot;</span><span class="fu">:</span> <span class="ot">[]</span><span class="fu">,</span>
+  <span class="dt">&quot;spouse&quot;</span><span class="fu">:</span> <span class="kw">null</span>
+<span class="fu">}</span> </code></pre></div>
 <p>Parsing text formatted as JSON objects is very easy in Python. Using the <code>json</code> library, and calling the <code>json.loads</code> method on a properly-formatted string will return a regular Python dictionary.</p>
 <p>Assuming that the above text is stored as <code>jsonString</code>, we can do the following to turn it into a dictionary in Python:</p>
-<pre><code>import json
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> json
 
-jsonDict = json.loads(jsonString)
+jsonDict <span class="op">=</span> json.loads(jsonString)
 
-# Prints: 27
-print(jsonDict[&quot;age&quot;])
+<span class="co"># Prints: 27</span>
+<span class="bu">print</span>(jsonDict[<span class="st">&quot;age&quot;</span>])
 
-# Prints: 3
-print(len(jsonDict[&quot;phoneNumbers&quot;]))
+<span class="co"># Prints: 3</span>
+<span class="bu">print</span>(<span class="bu">len</span>(jsonDict[<span class="st">&quot;phoneNumbers&quot;</span>]))
 
-# Prints: dict
-print(type(jsonDict[&quot;address&quot;]))</code></pre>
+<span class="co"># Prints: dict</span>
+<span class="bu">print</span>(<span class="bu">type</span>(jsonDict[<span class="st">&quot;address&quot;</span>]))</code></pre></div>
 <p>In order to create JSON text strings from Python dictionaries, we can use the <code>json.dumps</code> method. Calling this method will return a properly-formatted JSON string assuming that each item in the dictionary is well-formed. If you are working with custom objects, you will need to tell the <code>json</code> library how to turn those objects in to <code>json</code> strings.</p>
 <p>Additionally, the <code>indent</code> optional parameter to the <code>json.dumps</code> method is very useful for printing and debugging JSON strings. This allows the output string to be formatted nicely. The <code>indent</code> parameter is an integer representing the number of spaces to indent each successive nested layer of the dictionary. Typical values are 2 or 4.</p>
 <p>Here is an example of modifying some values from the JSON string above and returning the modified JSON string:</p>
-<pre><code>import json
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> json
 
-jsonDict = json.loads(jsonString)
+jsonDict <span class="op">=</span> json.loads(jsonString)
 
-# Change the age
-jsonDict[&quot;age&quot;] = 69
+<span class="co"># Change the age</span>
+jsonDict[<span class="st">&quot;age&quot;</span>] <span class="op">=</span> <span class="dv">69</span>
 
-# Add children
-jsonDict[&quot;children&quot;].append(&quot;Kiddo1&quot;)
-jsonDict[&quot;children&quot;].append(&quot;Little Boi&quot;)
+<span class="co"># Add children</span>
+jsonDict[<span class="st">&quot;children&quot;</span>].append(<span class="st">&quot;Kiddo1&quot;</span>)
+jsonDict[<span class="st">&quot;children&quot;</span>].append(<span class="st">&quot;Little Boi&quot;</span>)
 
-# Add a field
-jsonDict[&quot;favNumber&quot;] = 420
+<span class="co"># Add a field</span>
+jsonDict[<span class="st">&quot;favNumber&quot;</span>] <span class="op">=</span> <span class="dv">420</span>
 
-# Modify the address
-jsonDict[&quot;address&quot;][&quot;postalCode&quot;] = &quot;15213&quot;
+<span class="co"># Modify the address</span>
+jsonDict[<span class="st">&quot;address&quot;</span>][<span class="st">&quot;postalCode&quot;</span>] <span class="op">=</span> <span class="st">&quot;15213&quot;</span>
 
-# Get a nicely formatted JSON string
-newJsonString = json.dumps(jsonDict, indent=2)
-print(newJsonString)</code></pre>
+<span class="co"># Get a nicely formatted JSON string</span>
+newJsonString <span class="op">=</span> json.dumps(jsonDict, indent<span class="op">=</span><span class="dv">2</span>)
+<span class="bu">print</span>(newJsonString)</code></pre></div>
 <p>Running this code prints the following:</p>
-<pre><code>{
-  &quot;firstName&quot;: &quot;John&quot;,
-  &quot;lastName&quot;: &quot;Smith&quot;,
-  &quot;isAlive&quot;: true,
-  &quot;age&quot;: 69,
-  &quot;address&quot;: {
-    &quot;streetAddress&quot;: &quot;21 2nd Street&quot;,
-    &quot;city&quot;: &quot;New York&quot;,
-    &quot;state&quot;: &quot;NY&quot;,
-    &quot;postalCode&quot;: &quot;15213&quot;
-  },
-  &quot;phoneNumbers&quot;: [
-    {
-      &quot;type&quot;: &quot;home&quot;,
-      &quot;number&quot;: &quot;212 555-1234&quot;
-    },
-    {
-      &quot;type&quot;: &quot;office&quot;,
-      &quot;number&quot;: &quot;646 555-4567&quot;
-    },
-    {
-      &quot;type&quot;: &quot;mobile&quot;,
-      &quot;number&quot;: &quot;123 456-7890&quot;
-    }
-  ],
-  &quot;children&quot;: [
-    &quot;Kiddo1&quot;,
-    &quot;Little Boi&quot;
-  ],
-  &quot;spouse&quot;: null,
-  &quot;favNumber&quot;: 420
-}</code></pre>
+<div class="sourceCode"><pre class="sourceCode json"><code class="sourceCode json"><span class="fu">{</span>
+  <span class="dt">&quot;firstName&quot;</span><span class="fu">:</span> <span class="st">&quot;John&quot;</span><span class="fu">,</span>
+  <span class="dt">&quot;lastName&quot;</span><span class="fu">:</span> <span class="st">&quot;Smith&quot;</span><span class="fu">,</span>
+  <span class="dt">&quot;isAlive&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span>
+  <span class="dt">&quot;age&quot;</span><span class="fu">:</span> <span class="dv">69</span><span class="fu">,</span>
+  <span class="dt">&quot;address&quot;</span><span class="fu">:</span> <span class="fu">{</span>
+    <span class="dt">&quot;streetAddress&quot;</span><span class="fu">:</span> <span class="st">&quot;21 2nd Street&quot;</span><span class="fu">,</span>
+    <span class="dt">&quot;city&quot;</span><span class="fu">:</span> <span class="st">&quot;New York&quot;</span><span class="fu">,</span>
+    <span class="dt">&quot;state&quot;</span><span class="fu">:</span> <span class="st">&quot;NY&quot;</span><span class="fu">,</span>
+    <span class="dt">&quot;postalCode&quot;</span><span class="fu">:</span> <span class="st">&quot;15213&quot;</span>
+  <span class="fu">},</span>
+  <span class="dt">&quot;phoneNumbers&quot;</span><span class="fu">:</span> <span class="ot">[</span>
+    <span class="fu">{</span>
+      <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;home&quot;</span><span class="fu">,</span>
+      <span class="dt">&quot;number&quot;</span><span class="fu">:</span> <span class="st">&quot;212 555-1234&quot;</span>
+    <span class="fu">}</span><span class="ot">,</span>
+    <span class="fu">{</span>
+      <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;office&quot;</span><span class="fu">,</span>
+      <span class="dt">&quot;number&quot;</span><span class="fu">:</span> <span class="st">&quot;646 555-4567&quot;</span>
+    <span class="fu">}</span><span class="ot">,</span>
+    <span class="fu">{</span>
+      <span class="dt">&quot;type&quot;</span><span class="fu">:</span> <span class="st">&quot;mobile&quot;</span><span class="fu">,</span>
+      <span class="dt">&quot;number&quot;</span><span class="fu">:</span> <span class="st">&quot;123 456-7890&quot;</span>
+    <span class="fu">}</span>
+  <span class="ot">]</span><span class="fu">,</span>
+  <span class="dt">&quot;children&quot;</span><span class="fu">:</span> <span class="ot">[</span>
+    <span class="st">&quot;Kiddo1&quot;</span><span class="ot">,</span>
+    <span class="st">&quot;Little Boi&quot;</span>
+  <span class="ot">]</span><span class="fu">,</span>
+  <span class="dt">&quot;spouse&quot;</span><span class="fu">:</span> <span class="kw">null</span><span class="fu">,</span>
+  <span class="dt">&quot;favNumber&quot;</span><span class="fu">:</span> <span class="dv">420</span>
+<span class="fu">}</span></code></pre></div>
 <p>More information about JSON can be found at the following links:</p>
 <ul>
 <li><a href="https://docs.python.org/3/library/json.html">Python JSON Documentation</a></li>
@@ -119,7 +119,53 @@ print(newJsonString)</code></pre>
 <li><a href="https://en.wikipedia.org/wiki/JSON">JSON Wikipedia Page</a></li>
 </ul>
 <h1 id="apis">APIs</h1>
-<p>&quot;API&quot; is an acronym that stands for Application Programming Interface.</p>
+<p>&quot;API&quot; is an acronym that stands for Application Programming Interface. APIs are designed to allow programs to interact with other programs as easily as possible. Many modern Internet-based APIs use JSON to transfer data between servers and client software. This is typically done using network requests.</p>
+<p>In simple terms, network requests are when data is sent to a particular URL. Network requests come in one of two forms: <code>GET</code> or <code>POST</code>. So-called <code>GET</code> requests pass parameters to the destination page via the URL. A typical <code>GET</code> request URL might look like the following:</p>
+<pre><code>http://jstrieb.github.io/some_page?variable1=value1&amp;varable2=value2&amp;variable3=value3</code></pre>
+<p>Unlike <code>GET</code> requests, <code>POST</code> requests send data to the destination URL within the body of the request. When reading API documentation, pay attention to whether or not the requests must take the form of <code>GET</code> or <code>POST</code> requests and write your code accordingly.</p>
+<p>Requests to URLs can be made using Python very easily using the <code>requests</code> library. These requests both send data to the destination URL and receive a response back. We will write an example that uses the GIPHY API to get certain types of GIF images.</p>
+<p>When trying to write code using a particular API, the first step is to locate the API documentation, which will guide how we write our code. In this case, the GIPHY API documentation can be found <a href="https://developers.giphy.com/docs/">here</a>. Many websites strongly encourage the use of their services via the API and have associated tutorials in various languages teaching how to use them. Many APIs also require that the software using them is registered with the service and has an &quot;API key&quot; which is just a special string passed along with the request made to the API so that the service can track who is using it.</p>
+<p>To get started with the GIPHY API, we must first register our app using their online form. We do this by going to the <a href="https://developers.giphy.com/">GIPHY developer page</a> and registering, then hitting the &quot;Create an App&quot; button and following the instructions given. Once registered, we will get an API key that looks like the following:</p>
+<pre><code>exiOXgECL7g582dV2Mt85vYZoSs1Kb0m</code></pre>
+<p>Generally, it is a good idea to keep API keys secret and safe. This is because anything that could be done with a user account on a website could also be done with the API key.</p>
+<p>Now that we have our API key, we can make requests to the GIPHY API. The API Docs say that we can get GIFs using the Search Endpoint. More information about this endpoint can be found <a href="operation--gifs-search-get">here</a>. The Docs specify that we need to make a <code>GET</code> request to the following URL: <code>http://api.giphy.com/v1/gifs/search</code> with the following parameters:</p>
+<ul>
+<li><code>api_key</code> which will be our API key</li>
+<li><code>q</code> which will be the term we want to search for</li>
+<li><code>offset</code> which offsets the results (which we can use to get a random result of a specific type)</li>
+<li>A number of other optional parameters that we don't care about at the moment</li>
+</ul>
+<p>The Docs for the API also specify what the response will look like, but for now we will just make some requests and see what we can extract from the response. For this example, we will get a random cat GIF and print the link to the screen.</p>
+<p>In the following example, we import the <code>requests</code> library, assemble the data we want to send in a <code>data</code> dictionary, and make a <code>GET</code> request. Then we print the JSON output to the screen:</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> requests
+<span class="im">import</span> random
+
+data <span class="op">=</span> { <span class="st">&quot;api_key&quot;</span> : <span class="st">&quot;exiOXgECL7g582dV2Mt85vYZoSs1Kb0m&quot;</span>,
+         <span class="co">&quot;q&quot;</span> : <span class="st">&quot;cat&quot;</span>,
+         <span class="co">&quot;offset&quot;</span> : random.randint(<span class="dv">0</span>, <span class="dv">500</span>) }
+
+r <span class="op">=</span> requests.get(<span class="st">&quot;http://api.giphy.com/v1/gifs/search&quot;</span>, params<span class="op">=</span>data)
+
+<span class="bu">print</span>(r.text)</code></pre></div>
+<p>The example above searches GIPHY for &quot;cat&quot; and randomly offsets the search results. The code will print a bunch of JSON data with the returned GIFs. Now, we want to parse this data and extract meaningful information. In our case, we want the URL of the first GIF.</p>
+<p>Alternatively, it is also possible to make <code>GET</code> requests using the browser by manually encoding our parameters in the URL and then navigating there. For example, by entering the following URL into our browser, we can see the same output that the code above returns:</p>
+<pre><code>http://api.giphy.com/v1/gifs/search?api_key=exiOXgECL7g582dV2Mt85vYZoSs1Kb0m&amp;q=cat</code></pre>
+<p>By manually inspecting the output of the above code, we see that within the <code>data</code> attribute each element has a <code>bitly_gif_url</code> attribute that has a shortened link to the GIF. The following code extracts this URL and prints it to the screen:</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> requests
+<span class="im">import</span> random
+
+data <span class="op">=</span> { <span class="st">&quot;api_key&quot;</span> : <span class="st">&quot;exiOXgECL7g582dV2Mt85vYZoSs1Kb0m&quot;</span>,
+         <span class="co">&quot;q&quot;</span> : <span class="st">&quot;cat&quot;</span>,
+         <span class="co">&quot;offset&quot;</span> : random.randint(<span class="dv">0</span>, <span class="dv">500</span>) }
+
+r <span class="op">=</span> requests.get(<span class="st">&quot;http://api.giphy.com/v1/gifs/search&quot;</span>, params<span class="op">=</span>data)
+url <span class="op">=</span> r.json()[<span class="st">&quot;data&quot;</span>][<span class="dv">0</span>][<span class="st">&quot;bitly_gif_url&quot;</span>]
+<span class="bu">print</span>(url)</code></pre></div>
+<p>Note that the above code uses the JSON parser built natively into the <code>requests</code> library. When run the first time, this code linked to the following fun cat GIF:</p>
+<div class="figure">
+<img src="http://i.imgur.com/0Y1xISa.gif" title="Lit Cat GIF" />
+
+</div>
 <h1 id="groupme-bot-api">GroupMe Bot API</h1>
 <p>Text</p>
 <h1 id="facebook-messenger-bot-api">Facebook Messenger Bot API</h1>
