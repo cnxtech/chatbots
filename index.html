@@ -50,6 +50,7 @@ img {
 <body>
 <title>Chatbots — 15-112 Optional Lecture</title>
 
+
 <h1 id="chatbots">Chatbots</h1>
 <h2 id="optional-lecture">15-112 Optional Lecture</h2>
 <p>By: <a href="http://jstrieb.github.io">Jacob Strieb</a> and <a href="https://www.zuhayer.me/">Zuhayer Quazi</a></p>
@@ -61,6 +62,10 @@ img {
 <li><a href="#groupme-bot-api">GroupMe Bot API</a></li>
 <li><a href="#facebook-messenger-bot-api">Facebook Messenger Bot API</a></li>
 <li><a href="#running-code-on-a-server">Running Code on a Server</a></li>
+</ol>
+<h2 id="code-downloads">Code downloads</h2>
+<ol style="list-style-type: decimal">
+<li><a href="GroupMe.py" class="uri">GroupMe.py</a></li>
 </ol>
 <hr />
 <h1 id="json">JSON</h1>
@@ -192,9 +197,11 @@ newJsonString <span class="op">=</span> json.dumps(jsonDict, indent<span class="
 <div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> requests
 <span class="im">import</span> random
 
-data <span class="op">=</span> { <span class="st">&quot;api_key&quot;</span> : <span class="st">&quot;exiOXgECL7g582dV2Mt85vYZoSs1Kb0m&quot;</span>,
+data <span class="op">=</span> {
+         <span class="st">&quot;api_key&quot;</span> : <span class="st">&quot;exiOXgECL7g582dV2Mt85vYZoSs1Kb0m&quot;</span>,
          <span class="co">&quot;q&quot;</span> : <span class="st">&quot;cat&quot;</span>,
-         <span class="co">&quot;offset&quot;</span> : random.randint(<span class="dv">0</span>, <span class="dv">500</span>) }
+         <span class="co">&quot;offset&quot;</span> : random.randint(<span class="dv">0</span>, <span class="dv">500</span>)
+       }
 
 r <span class="op">=</span> requests.get(<span class="st">&quot;http://api.giphy.com/v1/gifs/search&quot;</span>, params<span class="op">=</span>data)
 
@@ -206,9 +213,11 @@ r <span class="op">=</span> requests.get(<span class="st">&quot;http://api.giphy
 <div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> requests
 <span class="im">import</span> random
 
-data <span class="op">=</span> { <span class="st">&quot;api_key&quot;</span> : <span class="st">&quot;exiOXgECL7g582dV2Mt85vYZoSs1Kb0m&quot;</span>,
+data <span class="op">=</span> {
+         <span class="st">&quot;api_key&quot;</span> : <span class="st">&quot;exiOXgECL7g582dV2Mt85vYZoSs1Kb0m&quot;</span>,
          <span class="co">&quot;q&quot;</span> : <span class="st">&quot;cat&quot;</span>,
-         <span class="co">&quot;offset&quot;</span> : random.randint(<span class="dv">0</span>, <span class="dv">500</span>) }
+         <span class="co">&quot;offset&quot;</span> : random.randint(<span class="dv">0</span>, <span class="dv">500</span>)
+       }
 
 r <span class="op">=</span> requests.get(<span class="st">&quot;http://api.giphy.com/v1/gifs/search&quot;</span>, params<span class="op">=</span>data)
 url <span class="op">=</span> r.json()[<span class="st">&quot;data&quot;</span>][<span class="dv">0</span>][<span class="st">&quot;bitly_gif_url&quot;</span>]
@@ -219,7 +228,155 @@ url <span class="op">=</span> r.json()[<span class="st">&quot;data&quot;</span>]
 
 </div>
 <h1 id="groupme-bot-api">GroupMe Bot API</h1>
-<p>Text</p>
+<p>Now that we know how to use APIs in general, we can begin to build a chatbot for the GroupMe messaging platform that will send messages in a group chat when we run the code. Doing this is largely the same as the procedure we went through in order to get GIFs from the GIPHY API.</p>
+<p>First, we must register a bot with a group. This can be done at <a href="https://dev.groupme.com/bots/new">this page</a>. Once the bot is registered, as with the GIPHY API, we will be given an access token that should be kept secret and safe. Then, sending a message is as easy as using the requests library as before:</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> requests
+
+data <span class="op">=</span> {
+         <span class="st">&quot;bot_id&quot;</span> : <span class="st">&quot;b52841049bfccdfe5217512b63&quot;</span>,
+         <span class="co">&quot;text&quot;</span> : <span class="st">&quot;This is a test&quot;</span>
+       }
+
+r <span class="op">=</span> requests.post(<span class="st">&quot;https://api.groupme.com/v3/bots/post&quot;</span>, data<span class="op">=</span>data)</code></pre></div>
+<p>Notice that this time, when we send the message, we make a <code>POST</code> request as opposed to a <code>GET</code> request. Also note that we use the optional parameter <code>data</code> instead of <code>params</code>.</p>
+<p>More information on creating bots can be found at the official <a href="https://dev.groupme.com/tutorials/bots">GroupMe Bots documentation here</a>.</p>
+<p>Simply sending messages is very useful; if you need to leave code running for a long time it can be helpful to get a notification on your phone when it has completed. Likewise, if you run code on a server, it can be helpful to have diagnostic information sent back to your phone.</p>
+<p>Now that we know how to send messages, we will make our bot respond to messages. There are two ways to do this. One way involves running your code locally on your computer, the other involves setting it up on a server that will remain running all of the time. Running it on your computer is useful for testing bot functionality, but when actually deploying a bot it is best to let it run on a server. See the <a href="#running-code-on-a-server">Servers</a> section for more information.</p>
+<p>The reason that doing this is more complex than having the bot simply send messages is that we need to regularly check whether or not new messages have been sent in the group. The strategy that we will use here involves regularly checking the GroupMe server that will let us know if there are new messages. Doing this requires an access token in addition to a Bot token (they are different for GroupMe). An access token can be obtained by clicking the &quot;Access Token&quot; button in the top right corner of the page where you registered your GroupMe Bot. It may be necessary to also register the bot as an <a href="https://dev.groupme.com/applications">application</a></p>
+<p>To poll the server for new messages, we will use the GroupMe push service. In order to use this service, our code must first get a clientId, and then must &quot;subscribe&quot; to a channel before being able to poll it for new messages. The following code does all of these steps before entering the main loop of the function where it polls for new messages. After seeing new messages, it makes sure it is responding to messages in the correct group, and makes sure that the bot isn't responding to itself (which could result in an infinite loop).</p>
+<p>This simple bot merely repeats whatever is sent in its group:</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> requests
+<span class="im">import</span> time
+<span class="im">import</span> json
+
+<span class="co">#*******************************************************************************</span>
+<span class="co">################################################################################</span>
+<span class="co"># </span>
+<span class="co"># Created by Jacob Strieb for the Chatbots optional lecture given as part of</span>
+<span class="co"># the 15-112 Fall 2018 semester at Carnegie Mellon University</span>
+<span class="co"># </span>
+<span class="co">################################################################################</span>
+<span class="co">#*******************************************************************************</span>
+
+<span class="co">##################################################</span>
+<span class="co"># Global Variables</span>
+<span class="co">##################################################</span>
+
+<span class="co"># All of these can be found on the bot registration page here:</span>
+<span class="co"># https://dev.groupme.com/bots/</span>
+accessToken <span class="op">=</span> <span class="st">&quot;&lt;your API key here&gt;&quot;</span>
+botId <span class="op">=</span> <span class="st">&quot;&lt;your bot ID here&gt;&quot;</span>
+groupId <span class="op">=</span> <span class="st">&quot;&lt;your bot&#39;s group ID here&gt;&quot;</span>
+
+<span class="co">##################################################</span>
+<span class="co"># GroupMe API Helper Functions</span>
+<span class="co">##################################################</span>
+
+<span class="co"># Send a message as the bot</span>
+<span class="kw">def</span> send(text):
+    data <span class="op">=</span> { <span class="st">&quot;bot_id&quot;</span> : botId, <span class="st">&quot;text&quot;</span> : text }
+    requests.post(<span class="st">&quot;https://api.groupme.com/v3/bots/post&quot;</span>, data<span class="op">=</span>data)
+
+<span class="co"># Get my user ID for later API calls</span>
+<span class="kw">def</span> getUserId(accessToken):
+    data <span class="op">=</span> { <span class="st">&quot;access_token&quot;</span> : accessToken }
+    r <span class="op">=</span> requests.get(<span class="st">&quot;https://api.groupme.com/v3/users/me&quot;</span>, params<span class="op">=</span>data)
+    <span class="cf">return</span> r.json()[<span class="st">&quot;response&quot;</span>][<span class="st">&quot;user_id&quot;</span>]
+
+<span class="co"># Get a client ID to use for this session</span>
+<span class="kw">def</span> getClientId():
+    <span class="co"># Copied data from tutorial here: https://dev.groupme.com/tutorials/push</span>
+    data <span class="op">=</span> [ {
+               <span class="st">&quot;channel&quot;</span> : <span class="st">&quot;/meta/handshake&quot;</span>,
+               <span class="co">&quot;version&quot;</span> : <span class="st">&quot;1.0&quot;</span>,
+               <span class="co">&quot;supportedConnectionTypes&quot;</span> : [<span class="st">&quot;long-polling&quot;</span>],
+               <span class="co">&quot;id&quot;</span> : <span class="st">&quot;1&quot;</span>
+             } ]
+    r <span class="op">=</span> requests.post(<span class="st">&quot;https://push.groupme.com/faye&quot;</span>, json<span class="op">=</span>data)
+    <span class="cf">return</span> r.json()[<span class="dv">0</span>][<span class="st">&quot;clientId&quot;</span>]
+
+<span class="co"># Subscribe to the group channel -- bind the client ID to the user ID</span>
+<span class="kw">def</span> subscribe(accessToken, clientId):
+    <span class="co"># Copied data from tutorial here: https://dev.groupme.com/tutorials/push</span>
+    data <span class="op">=</span> [ {
+               <span class="st">&quot;channel&quot;</span> : <span class="st">&quot;/meta/subscribe&quot;</span>,
+               <span class="co">&quot;clientId&quot;</span> : clientId,
+               <span class="co">&quot;subscription&quot;</span> : <span class="st">&quot;/user/</span><span class="sc">%s</span><span class="st">&quot;</span> <span class="op">%</span> getUserId(accessToken),
+               <span class="co">&quot;id&quot;</span> : <span class="st">&quot;2&quot;</span>,
+               <span class="co">&quot;ext&quot;</span> : {
+                         <span class="st">&quot;access_token&quot;</span> : accessToken,
+                         <span class="co">&quot;timestamp&quot;</span> : <span class="bu">int</span>(time.time())
+                       }
+             } ]
+    r <span class="op">=</span> requests.post(<span class="st">&quot;https://push.groupme.com/faye&quot;</span>, json<span class="op">=</span>data)
+    <span class="cf">if</span> <span class="kw">not</span> r.json()[<span class="dv">0</span>][<span class="st">&quot;successful&quot;</span>]: <span class="cf">raise</span> <span class="pp">Exception</span>(<span class="st">&quot;Subscription failed&quot;</span>)
+
+<span class="co"># Get new messages from the server</span>
+<span class="kw">def</span> getNew(clientId, numCalls):
+    <span class="co"># Copied data from tutorial here: https://dev.groupme.com/tutorials/push</span>
+    data <span class="op">=</span> [ {
+               <span class="st">&quot;channel&quot;</span> : <span class="st">&quot;/meta/connect&quot;</span>,
+               <span class="co">&quot;clientId&quot;</span> : clientId,
+               <span class="co">&quot;connectionType&quot;</span> : <span class="st">&quot;in-process&quot;</span>,
+               <span class="co">&quot;id&quot;</span> : <span class="st">&quot;</span><span class="sc">%d</span><span class="st">&quot;</span> <span class="op">%</span> numCalls
+             } ]
+    <span class="cf">try</span>:
+        r <span class="op">=</span> requests.post(<span class="st">&quot;https://push.groupme.com/faye&quot;</span>, json<span class="op">=</span>data, stream<span class="op">=</span><span class="va">True</span>)
+    <span class="cf">except</span>:
+        <span class="bu">print</span>(<span class="st">&quot;There was a problem getting the next messages.&quot;</span>)
+        <span class="cf">return</span>
+    <span class="cf">for</span> line <span class="kw">in</span> r.iter_lines():
+        preProcess(line.decode(<span class="st">&quot;utf-8&quot;</span>))
+
+<span class="co"># Ensure each message sent to the right group and not from the bot</span>
+<span class="kw">def</span> preProcess(line):
+    data <span class="op">=</span> json.loads(line)
+    <span class="cf">for</span> response <span class="kw">in</span> data:
+        <span class="co"># Make sure it is a message type</span>
+        <span class="cf">if</span> <span class="st">&quot;data&quot;</span> <span class="kw">not</span> <span class="kw">in</span> response: <span class="cf">continue</span>
+        <span class="cf">if</span> <span class="st">&quot;type&quot;</span> <span class="kw">not</span> <span class="kw">in</span> response[<span class="st">&quot;data&quot;</span>]: <span class="cf">continue</span>
+        <span class="cf">if</span> response[<span class="st">&quot;data&quot;</span>][<span class="st">&quot;type&quot;</span>] <span class="op">!=</span> <span class="st">&quot;line.create&quot;</span>: <span class="cf">continue</span>
+        <span class="cf">if</span> <span class="st">&quot;subject&quot;</span> <span class="kw">not</span> <span class="kw">in</span> response[<span class="st">&quot;data&quot;</span>]: <span class="cf">continue</span>
+
+        <span class="co"># Make sure it was sent to the correct group and not from the bot</span>
+        msg <span class="op">=</span> response[<span class="st">&quot;data&quot;</span>][<span class="st">&quot;subject&quot;</span>]
+        <span class="cf">if</span> msg[<span class="st">&quot;group_id&quot;</span>] <span class="op">!=</span> groupId: <span class="cf">continue</span>
+        <span class="cf">if</span> msg[<span class="st">&quot;sender_type&quot;</span>] <span class="op">==</span> <span class="st">&quot;bot&quot;</span>: <span class="cf">continue</span>
+
+        <span class="co"># If none of the above skipped, actually process the message</span>
+        process(msg)
+
+<span class="co">##################################################</span>
+<span class="co"># Bot functionality</span>
+<span class="co">##################################################</span>
+
+<span class="co"># Process the msg dictionary containing sender and message information</span>
+<span class="kw">def</span> process(msg):
+    send(msg[<span class="st">&quot;text&quot;</span>])
+
+<span class="co">##################################################</span>
+<span class="co"># Main Function</span>
+<span class="co">##################################################</span>
+
+<span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:
+    <span class="co"># Try subscribing</span>
+    clientId <span class="op">=</span> <span class="st">&quot;&quot;</span>
+    <span class="cf">try</span>:
+        clientId <span class="op">=</span> getClientId()
+        subscribe(accessToken, clientId)
+    <span class="cf">except</span>:
+        <span class="bu">print</span>(<span class="st">&quot;There was a problem while trying to subscribe to the message&quot;</span>
+              <span class="co">&quot;feed.&quot;</span>)
+        exit()
+
+    <span class="co"># Poll the server for new messages</span>
+    numCalls <span class="op">=</span> <span class="dv">3</span>
+    <span class="cf">while</span> <span class="va">True</span>:
+        getNew(clientId, numCalls)
+        numCalls <span class="op">+=</span> <span class="dv">1</span></code></pre></div>
+<p>Note that the code above as a space for you to enter your bot's details. Also note that the only part of the code that actually processes messages is the <code>process</code> function near the bottom of the code file. The rest is responsible for handling the connection to the GroupMe API.</p>
+<p>For your convenience, the code above can be downloaded from <a href="GroupMe.py">here</a>.</p>
+<p>The code above should not be used for complete projects, but should only be used for testing bot functionality before deploying on a server. Likewise for large projects, the code above should be imported as a module and separated from the <code>process</code> function to make the code more readable.</p>
 <h1 id="facebook-messenger-bot-api">Facebook Messenger Bot API</h1>
 <p>Text</p>
 <h1 id="running-code-on-a-server">Running Code on a Server</h1>

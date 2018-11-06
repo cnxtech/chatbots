@@ -13,6 +13,9 @@ Published on November 6, 2018
 4. [Facebook Messenger Bot API](#facebook-messenger-bot-api)
 5. [Running Code on a Server](#running-code-on-a-server)
 
+## Code downloads
+1. [GroupMe.py](GroupMe.py)
+
 ---
 
 # JSON
@@ -173,9 +176,11 @@ In the following example, we import the `requests` library, assemble the data we
 import requests
 import random
 
-data = { "api_key" : "exiOXgECL7g582dV2Mt85vYZoSs1Kb0m",
+data = {
+         "api_key" : "exiOXgECL7g582dV2Mt85vYZoSs1Kb0m",
          "q" : "cat",
-         "offset" : random.randint(0, 500) }
+         "offset" : random.randint(0, 500)
+       }
 
 r = requests.get("http://api.giphy.com/v1/gifs/search", params=data)
 
@@ -194,9 +199,11 @@ By manually inspecting the output of the above code, we see that within the `dat
 import requests
 import random
 
-data = { "api_key" : "exiOXgECL7g582dV2Mt85vYZoSs1Kb0m",
+data = {
+         "api_key" : "exiOXgECL7g582dV2Mt85vYZoSs1Kb0m",
          "q" : "cat",
-         "offset" : random.randint(0, 500) }
+         "offset" : random.randint(0, 500)
+       }
 
 r = requests.get("http://api.giphy.com/v1/gifs/search", params=data)
 url = r.json()["data"][0]["bitly_gif_url"]
@@ -208,7 +215,170 @@ Note that the above code uses the JSON parser built natively into the `requests`
 ![](http://i.imgur.com/0Y1xISa.gif "Lit Cat GIF")
 
 # GroupMe Bot API
-Text
+Now that we know how to use APIs in general, we can begin to build a chatbot for the GroupMe messaging platform that will send messages in a group chat when we run the code. Doing this is largely the same as the procedure we went through in order to get GIFs from the GIPHY API.
+
+First, we must register a bot with a group. This can be done at [this page](https://dev.groupme.com/bots/new). Once the bot is registered, as with the GIPHY API, we will be given an access token that should be kept secret and safe. Then, sending a message is as easy as using the requests library as before:
+```python
+import requests
+
+data = {
+         "bot_id" : "b52841049bfccdfe5217512b63",
+         "text" : "This is a test"
+       }
+
+r = requests.post("https://api.groupme.com/v3/bots/post", data=data)
+```
+
+Notice that this time, when we send the message, we make a `POST` request as opposed to a `GET` request. Also note that we use the optional parameter `data` instead of `params`. 
+
+More information on creating bots can be found at the official [GroupMe Bots documentation here](https://dev.groupme.com/tutorials/bots).
+
+Simply sending messages is very useful; if you need to leave code running for a long time it can be helpful to get a notification on your phone when it has completed. Likewise, if you run code on a server, it can be helpful to have diagnostic information sent back to your phone.
+
+Now that we know how to send messages, we will make our bot respond to messages. There are two ways to do this. One way involves running your code locally on your computer, the other involves setting it up on a server that will remain running all of the time. Running it on your computer is useful for testing bot functionality, but when actually deploying a bot it is best to let it run on a server. See the [Servers](#running-code-on-a-server) section for more information.
+
+The reason that doing this is more complex than having the bot simply send messages is that we need to regularly check whether or not new messages have been sent in the group. The strategy that we will use here involves regularly checking the GroupMe server that will let us know if there are new messages. Doing this requires an access token in addition to a Bot token (they are different for GroupMe). An access token can be obtained by clicking the "Access Token" button in the top right corner of the page where you registered your GroupMe Bot. It may be necessary to also register the bot as an [application](https://dev.groupme.com/applications)
+
+To poll the server for new messages, we will use the GroupMe push service. In order to use this service, our code must first get a clientId, and then must "subscribe" to a channel before being able to poll it for new messages. The following code does all of these steps before entering the main loop of the function where it polls for new messages. After seeing new messages, it makes sure it is responding to messages in the correct group, and makes sure that the bot isn't responding to itself (which could result in an infinite loop).
+
+This simple bot merely repeats whatever is sent in its group:
+```python
+import requests
+import time
+import json
+
+#*******************************************************************************
+################################################################################
+# 
+# Created by Jacob Strieb for the Chatbots optional lecture given as part of
+# the 15-112 Fall 2018 semester at Carnegie Mellon University
+# 
+################################################################################
+#*******************************************************************************
+
+##################################################
+# Global Variables
+##################################################
+
+# All of these can be found on the bot registration page here:
+# https://dev.groupme.com/bots/
+accessToken = "<your API key here>"
+botId = "<your bot ID here>"
+groupId = "<your bot's group ID here>"
+
+##################################################
+# GroupMe API Helper Functions
+##################################################
+
+# Send a message as the bot
+def send(text):
+    data = { "bot_id" : botId, "text" : text }
+    requests.post("https://api.groupme.com/v3/bots/post", data=data)
+
+# Get my user ID for later API calls
+def getUserId(accessToken):
+    data = { "access_token" : accessToken }
+    r = requests.get("https://api.groupme.com/v3/users/me", params=data)
+    return r.json()["response"]["user_id"]
+
+# Get a client ID to use for this session
+def getClientId():
+    # Copied data from tutorial here: https://dev.groupme.com/tutorials/push
+    data = [ {
+               "channel" : "/meta/handshake",
+               "version" : "1.0",
+               "supportedConnectionTypes" : ["long-polling"],
+               "id" : "1"
+             } ]
+    r = requests.post("https://push.groupme.com/faye", json=data)
+    return r.json()[0]["clientId"]
+
+# Subscribe to the group channel -- bind the client ID to the user ID
+def subscribe(accessToken, clientId):
+    # Copied data from tutorial here: https://dev.groupme.com/tutorials/push
+    data = [ {
+               "channel" : "/meta/subscribe",
+               "clientId" : clientId,
+               "subscription" : "/user/%s" % getUserId(accessToken),
+               "id" : "2",
+               "ext" : {
+                         "access_token" : accessToken,
+                         "timestamp" : int(time.time())
+                       }
+             } ]
+    r = requests.post("https://push.groupme.com/faye", json=data)
+    if not r.json()[0]["successful"]: raise Exception("Subscription failed")
+
+# Get new messages from the server
+def getNew(clientId, numCalls):
+    # Copied data from tutorial here: https://dev.groupme.com/tutorials/push
+    data = [ {
+               "channel" : "/meta/connect",
+               "clientId" : clientId,
+               "connectionType" : "in-process",
+               "id" : "%d" % numCalls
+             } ]
+    try:
+        r = requests.post("https://push.groupme.com/faye", json=data, stream=True)
+    except:
+        print("There was a problem getting the next messages.")
+        return
+    for line in r.iter_lines():
+        preProcess(line.decode("utf-8"))
+
+# Ensure each message sent to the right group and not from the bot
+def preProcess(line):
+    data = json.loads(line)
+    for response in data:
+        # Make sure it is a message type
+        if "data" not in response: continue
+        if "type" not in response["data"]: continue
+        if response["data"]["type"] != "line.create": continue
+        if "subject" not in response["data"]: continue
+
+        # Make sure it was sent to the correct group and not from the bot
+        msg = response["data"]["subject"]
+        if msg["group_id"] != groupId: continue
+        if msg["sender_type"] == "bot": continue
+
+        # If none of the above skipped, actually process the message
+        process(msg)
+
+##################################################
+# Bot functionality
+##################################################
+
+# Process the msg dictionary containing sender and message information
+def process(msg):
+    send(msg["text"])
+
+##################################################
+# Main Function
+##################################################
+
+if __name__ == "__main__":
+    # Try subscribing
+    clientId = ""
+    try:
+        clientId = getClientId()
+        subscribe(accessToken, clientId)
+    except:
+        print("There was a problem while trying to subscribe to the message"
+              "feed.")
+        exit()
+
+    # Poll the server for new messages
+    numCalls = 3
+    while True:
+        getNew(clientId, numCalls)
+        numCalls += 1
+```
+
+Note that the code above as a space for you to enter your bot's details. Also note that the only part of the code that actually processes messages is the `process` function near the bottom of the code file. The rest is responsible for handling the connection to the GroupMe API.
+
+For your convenience, the code above can be downloaded from [here](GroupMe.py).
+
+The code above should not be used for complete projects, but should only be used for testing bot functionality before deploying on a server. Likewise for large projects, the code above should be imported as a module and separated from the `process` function to make the code more readable.
 
 # Facebook Messenger Bot API
 Text
