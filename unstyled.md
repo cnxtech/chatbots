@@ -12,6 +12,7 @@ Published on November 6, 2018
 3. [GroupMe Bot API](#groupme-bot-api)
 4. [Facebook Messenger Bot API](#facebook-messenger-bot-api)
 5. [Running Code on a Server](#running-code-on-a-server)
+6. [Ideas](#ideas)
 
 ## Code downloads
 1. [GroupMe.py](GroupMe.py)
@@ -389,7 +390,7 @@ More information about GroupMe APIs can be found here:
 - [Main Documentation Link](https://dev.groupme.com/)
 - [Bots Tutorial](https://dev.groupme.com/tutorials/bots)
 - [Tutorial for Push Connections](https://dev.groupme.com/tutorials/push)
-- [Download the Code Above](GroupMe.py).
+- [Download the Code Above](GroupMe.py)
 
 # Facebook Messenger Bot API
 Content...
@@ -471,3 +472,29 @@ More information about running a GroupMe Bot (and other code) on Heroku can be f
 - [GroupMe Bot Heroku Tutorial](http://www.apnorton.com/blog/2017/02/28/How-I-wrote-a-Groupme-Chatbot-in-24-hours/)
 - [Getting Started with Heroku](https://devcenter.heroku.com/articles/getting-started-with-python)
 - [Getting Started with Flask](https://scotch.io/tutorials/getting-started-with-flask-a-python-microframework)
+
+# Ideas
+Now that you have the means to make a chatbot, what can you do with it? Below is a list of some chatbot features that I have personally implemented (or one day hope to add to my chatbots):
+
+- Check the weather
+- Define terms
+- Look terms up on Urban Dictionary
+- Caption images
+- Insult members of the group chat
+- Compile a to-do list
+- Do simple math
+- Add songs to a Spotify playlist
+- Tell jokes
+- Say "that's what she said"
+- Play 20 questions
+- Set reminders
+- Send GIFs
+- Get posts from social media
+
+Basically any API that exists can be integrated with a chatbot opening a world of possibilities for making group chats more interesting.
+
+Here is a brief list of some advanced chatbots:
+
+- [Bucket](http://wiki.xkcd.com/irc/Bucket) built by the creator of [XKCD](https://xkcd.com/)
+- [Hello Vote](https://www.hello.vote/) to help and remind people to vote
+- [Literally Thousands of Others](http://bfy.tw/KiHX)
