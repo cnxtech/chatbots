@@ -107,6 +107,9 @@ def preProcess(line):
 def process(msg):
     send(msg["text"])
 
+    # Uncomment the following line to print the whole message dict
+    # print(json.dumps(msg, indent=2))
+
 ##################################################
 # Main Function
 ##################################################

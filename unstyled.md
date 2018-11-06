@@ -352,6 +352,9 @@ def preProcess(line):
 def process(msg):
     send(msg["text"])
 
+    # Uncomment the following line to print the whole message dict
+    # print(json.dumps(msg, indent=2))
+
 ##################################################
 # Main Function
 ##################################################
@@ -380,8 +383,91 @@ For your convenience, the code above can be downloaded from [here](GroupMe.py).
 
 The code above should not be used for complete projects, but should only be used for testing bot functionality before deploying on a server. Likewise for large projects, the code above should be imported as a module and separated from the `process` function to make the code more readable.
 
+More information about GroupMe APIs can be found here:
+
+- [Register Bots](https://dev.groupme.com/bots)
+- [Main Documentation Link](https://dev.groupme.com/)
+- [Bots Tutorial](https://dev.groupme.com/tutorials/bots)
+- [Tutorial for Push Connections](https://dev.groupme.com/tutorials/push)
+- [Download the Code Above](GroupMe.py).
+
 # Facebook Messenger Bot API
-Text
+Content...
 
 # Running Code on a Server
-Text
+Once your code to process and send messages has been written and tested locally, you can upload it to a server so that it can run while your computer is off. We will include a brief tutorial below for setting up the code you have written on the cloud platform Heroku.
+
+Most of the following setup steps were taken from [this tutorial](http://www.apnorton.com/blog/2017/02/28/How-I-wrote-a-Groupme-Chatbot-in-24-hours/). Feel free to follow it instead.
+
+Note: putting code on Heroku requires the use of `git` in addition to installing the `heroku` command-line interface from [here](https://devcenter.heroku.com/articles/heroku-cli). Please make sure you can use the `git` and `heroku` commands before proceeding.
+
+First, create a new folder and initialize a new `git` repository. Then create a new `heroku` app in the folder with the repository. To do this, run the following commands in `cmd`/Terminal/`bash` depeding on whether you are on Windows, Mac, or Linux (respectively):
+
+```bash
+mkdir bot
+cd bot
+git init .
+heroku apps:create bot
+git remote
+```
+
+Once the repository has been created, you will need to add a `Procfile`, `runtime.txt` and `requirements.txt` file to the repo so that Heroku knows how to set up your environment. Put the following things in each of the files:
+
+#### `Procfile`
+```
+web: gunicorn app:app --log-file=-
+```
+
+#### `runtime.txt`
+```
+python-3.6.0
+```
+
+#### `requirements.txt`
+```
+Flask==0.12
+gunicorn==19.6.0
+```
+
+Once the above files have been added to the repository, the last step is to add your code and tell Heroku to run it. In order to add your code, insert it into a file called `app.py` formatted as the code below is:
+```python
+import json
+import requests
+from flask import Flask, request
+
+app = Flask(__name__)
+botId = "<your bot ID here>"
+
+@app.route('/', methods=['POST'])
+def webhook():
+    msg = request.get_json()
+
+    # Ignore messages sent by the bot
+    if msg["sender_type"] != "bot":
+        process(msg)
+
+# Insert any helper functions used by the process() function here
+# For example, the send() function:
+def send(text):
+    data = { "bot_id" : botId, "text" : text }
+    requests.post("https://api.groupme.com/v3/bots/post", data=data)
+
+def process(msg):
+    # Insert your process() function that you wrote as with the test code above
+    pass
+```
+
+Once `app.py` has been created, it is time to send the code to Heroku to be run. To do this, run the following commands:
+```bash
+git add .
+git commit -am 'updated code'
+git push heroku master
+```
+
+The last step when that has been done is to get the address of your Heroku project and set it as the "Callback URL" on the GroupMe Bots page [here](https://dev.groupme.com/bots).
+
+More information about running a GroupMe Bot (and other code) on Heroku can be found here:
+
+- [GroupMe Bot Heroku Tutorial](http://www.apnorton.com/blog/2017/02/28/How-I-wrote-a-Groupme-Chatbot-in-24-hours/)
+- [Getting Started with Heroku](https://devcenter.heroku.com/articles/getting-started-with-python)
+- [Getting Started with Flask](https://scotch.io/tutorials/getting-started-with-flask-a-python-microframework)
