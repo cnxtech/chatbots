@@ -393,7 +393,93 @@ More information about GroupMe APIs can be found here:
 - [Download the Code Above](GroupMe.py)
 
 # Facebook Messenger Bot API
-Content...
+###Dependencies
+- Flask `pip install flask`
+- pymessenger `pip install pymessenger`
+- ngrok (hosting service)
+
+###Flask Application
+Flask is a service (written in python) that runs an application (in this case, the application is our Lil Pump Facebook Page Messenger). In our Flask application we will be handling *all* of the following:
+- Receiving messages
+- Verifying authenticity through tokens
+- Get user information
+- Send message to user
+
+```python
+#Python libraries that we need to import for our bot
+import random
+from flask import Flask, request
+from pymessenger.bot import Bot
+
+app = Flask(__name__)
+ACCESS_TOKEN = 'fdskafndsfjslafdsakjfdsaklfsaldf' #my token! :)
+VERIFY_TOKEN = 'esketit' #some random verify token
+bot = Bot(ACCESS_TOKEN)
+
+#We will receive messages that Facebook sends our bot at this endpoint 
+@app.route("/", methods=['GET', 'POST'])
+def receive_message():
+    if request.method == 'GET':
+        """Before allowing people to message your bot, Facebook has implemented a verify token
+        that confirms all requests that your bot receives came from Facebook.""" 
+        token_sent = request.args.get("hub.verify_token")
+        return verify_fb_token(token_sent)
+    #if the request was not get, it must be POST and we can just proceed with sending a message back to user
+    else:
+        # get whatever message a user sent the bot
+       output = request.get_json()
+       for event in output['entry']:
+          messaging = event['messaging']
+          for message in messaging:
+            if message.get('message'):
+                #Facebook Messenger ID for user so we know where to send response back to
+                recipient_id = message['sender']['id']
+                if message['message'].get('text'):
+                    response_sent_text = get_message()
+                    send_message(recipient_id, response_sent_text)
+                #if user sends us a GIF, photo,video, or any other non-text item
+                if message['message'].get('attachments'):
+                    response_sent_nontext = get_message()
+                    send_message(recipient_id, response_sent_nontext)
+    return "Message Processed"
+
+
+def verify_fb_token(token_sent):
+    #take token sent by facebook and verify it matches the verify token you sent
+    #if they match, allow the request, else return an error 
+    if token_sent == VERIFY_TOKEN:
+        return request.args.get("hub.challenge")
+    return 'Invalid verification token'
+
+
+#chooses a random message to send to the user
+def get_message():
+    sample_responses = ["ESKETITTTTTT", "100 on my wrist, 80 on a brick, Lil Pump never spend money on a b**ch", "Gucci Gang Gucci Gang Gucci Gang Gucci Gang Gucci Gang", "I sold crack on PayPal",
+              "LIL PUMP IN THE WHITE HOUSE, MADE WHITE HOUSE TURN TO A TRAP HOUSE", "Took 4 xans now I'm feeling like a hero.. And my auntie on P.O."]
+    # return selected item to the user
+    return random.choice(sample_responses)
+
+#uses PyMessenger to send response to user
+def send_message(recipient_id, response):
+    #sends user the text message provided via input response parameter
+    bot.send_text_message(recipient_id, response)
+    return "success"
+
+if __name__ == "__main__":
+    app.run()
+```
+
+###How to Set Up Your Bot
+- Create Facebook Page (literally anything!)
+- Link your facebook account to FB Developers
+- Create Messenger App
+- Get API token from the dashboard (link your fb page)
+- Integrate Webhook using **ngrok** link.
+
+###How to Host it
+- `python app.py` will run your Flask App and return something like this:  `* Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)`
+- `ngrok http 5000` will give you a link like `https://813123d.ngrok.io`
+- Paste that into the Webhook above, subscribe your page.
 
 # Running Code on a Server
 Once your code to process and send messages has been written and tested locally, you can upload it to a server so that it can run while your computer is off. We will include a brief tutorial below for setting up the code you have written on the cloud platform Heroku.
