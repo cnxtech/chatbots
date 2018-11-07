@@ -175,60 +175,6 @@ url <span class="op">=</span> r.json()[<span class="st">&quot;data&quot;</span>]
 <img src="http://i.imgur.com/0Y1xISa.gif" title="Lit Cat GIF" />
 
 </div>
-<h1 id="running-code-on-a-server">Running Code on a Server</h1>
-<p>Once your code to process and send messages has been written and tested locally, you can upload it to a server so that it can run while your computer is off. We will include a brief tutorial below for setting up the code you have written on the cloud platform Heroku.</p>
-<p>Most of the following setup steps were taken from <a href="http://www.apnorton.com/blog/2017/02/28/How-I-wrote-a-Groupme-Chatbot-in-24-hours/">this tutorial</a>. Feel free to follow it instead.</p>
-<p>Note: putting code on Heroku requires the use of <code>git</code> in addition to installing the <code>heroku</code> command-line interface from <a href="https://devcenter.heroku.com/articles/heroku-cli">here</a>. Please make sure you can use the <code>git</code> and <code>heroku</code> commands before proceeding.</p>
-<p>First, create a new folder and initialize a new <code>git</code> repository. Then create a new <code>heroku</code> app in the folder with the repository. To do this, run the following commands in <code>cmd</code>/Terminal/<code>bash</code> depeding on whether you are on Windows, Mac, or Linux (respectively):</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">mkdir</span> bot
-<span class="bu">cd</span> bot
-<span class="fu">git</span> init .
-<span class="ex">heroku</span> apps:create bot
-<span class="fu">git</span> remote</code></pre></div>
-<p>Once the repository has been created, you will need to add a <code>Procfile</code>, <code>runtime.txt</code> and <code>requirements.txt</code> file to the repo so that Heroku knows how to set up your environment. Put the following things in each of the files:</p>
-<h4 id="procfile"><code>Procfile</code></h4>
-<pre><code>web: gunicorn app:app --log-file=-</code></pre>
-<h4 id="runtime.txt"><code>runtime.txt</code></h4>
-<pre><code>python-3.6.0</code></pre>
-<h4 id="requirements.txt"><code>requirements.txt</code></h4>
-<pre><code>Flask==0.12
-gunicorn==19.6.0</code></pre>
-<p>Once the above files have been added to the repository, the last step is to add your code and tell Heroku to run it. In order to add your code, insert it into a file called <code>app.py</code> formatted as the code below is:</p>
-<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> json
-<span class="im">import</span> requests
-<span class="im">from</span> flask <span class="im">import</span> Flask, request
-
-app <span class="op">=</span> Flask(<span class="va">__name__</span>)
-botId <span class="op">=</span> <span class="st">&quot;&lt;your bot ID here&gt;&quot;</span>
-
-<span class="at">@app.route</span>(<span class="st">&#39;/&#39;</span>, methods<span class="op">=</span>[<span class="st">&#39;POST&#39;</span>])
-<span class="kw">def</span> webhook():
-    msg <span class="op">=</span> request.get_json()
-
-    <span class="co"># Ignore messages sent by the bot</span>
-    <span class="cf">if</span> msg[<span class="st">&quot;sender_type&quot;</span>] <span class="op">!=</span> <span class="st">&quot;bot&quot;</span>:
-        process(msg)
-
-<span class="co"># Insert any helper functions used by the process() function here</span>
-<span class="co"># For example, the send() function:</span>
-<span class="kw">def</span> send(text):
-    data <span class="op">=</span> { <span class="st">&quot;bot_id&quot;</span> : botId, <span class="st">&quot;text&quot;</span> : text }
-    requests.post(<span class="st">&quot;https://api.groupme.com/v3/bots/post&quot;</span>, data<span class="op">=</span>data)
-
-<span class="kw">def</span> process(msg):
-    <span class="co"># Insert your process() function that you wrote as with the test code above</span>
-    <span class="cf">pass</span></code></pre></div>
-<p>Once <code>app.py</code> has been created, it is time to send the code to Heroku to be run. To do this, run the following commands:</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">git</span> add .
-<span class="fu">git</span> commit -am <span class="st">&#39;updated code&#39;</span>
-<span class="fu">git</span> push heroku master</code></pre></div>
-<p>The last step when that has been done is to get the address of your Heroku project and set it as the &quot;Callback URL&quot; on the GroupMe Bots page <a href="https://dev.groupme.com/bots">here</a>.</p>
-<p>More information about running a GroupMe Bot (and other code) on Heroku can be found here:</p>
-<ul>
-<li><a href="http://www.apnorton.com/blog/2017/02/28/How-I-wrote-a-Groupme-Chatbot-in-24-hours/">GroupMe Bot Heroku Tutorial</a></li>
-<li><a href="https://devcenter.heroku.com/articles/getting-started-with-python">Getting Started with Heroku</a></li>
-<li><a href="https://scotch.io/tutorials/getting-started-with-flask-a-python-microframework">Getting Started with Flask</a></li>
-</ul>
 <h1 id="groupme-bot-api">GroupMe Bot API</h1>
 <p>Now that we know how to use APIs in general, we can begin to build a chatbot for the GroupMe messaging platform that will send messages in a group chat when we run the code. Doing this is largely the same as the procedure we went through in order to get GIFs from the GIPHY API.</p>
 <p>First, we must register a bot with a group. This can be done at <a href="https://dev.groupme.com/bots/new">this page</a>. Once the bot is registered, as with the GIPHY API, we will be given an access token that should be kept secret and safe. Then, sending a message is as easy as using the requests library as before:</p>
@@ -473,6 +419,60 @@ bot <span class="op">=</span> Bot(ACCESS_TOKEN)
 <li><code>python app.py</code> will run your Flask App and return something like this: <code>* Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)</code></li>
 <li><code>ngrok http 5000</code> will give you a link like <code>https://813123d.ngrok.io</code></li>
 <li>Paste that into the Webhook above, subscribe your page.</li>
+</ul>
+<h1 id="running-code-on-a-server">Running Code on a Server</h1>
+<p>Once your code to process and send messages has been written and tested locally, you can upload it to a server so that it can run while your computer is off. We will include a brief tutorial below for setting up the code you have written on the cloud platform Heroku.</p>
+<p>Most of the following setup steps were taken from <a href="http://www.apnorton.com/blog/2017/02/28/How-I-wrote-a-Groupme-Chatbot-in-24-hours/">this tutorial</a>. Feel free to follow it instead.</p>
+<p>Note: putting code on Heroku requires the use of <code>git</code> in addition to installing the <code>heroku</code> command-line interface from <a href="https://devcenter.heroku.com/articles/heroku-cli">here</a>. Please make sure you can use the <code>git</code> and <code>heroku</code> commands before proceeding.</p>
+<p>First, create a new folder and initialize a new <code>git</code> repository. Then create a new <code>heroku</code> app in the folder with the repository. To do this, run the following commands in <code>cmd</code>/Terminal/<code>bash</code> depeding on whether you are on Windows, Mac, or Linux (respectively):</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">mkdir</span> bot
+<span class="bu">cd</span> bot
+<span class="fu">git</span> init .
+<span class="ex">heroku</span> apps:create bot
+<span class="fu">git</span> remote</code></pre></div>
+<p>Once the repository has been created, you will need to add a <code>Procfile</code>, <code>runtime.txt</code> and <code>requirements.txt</code> file to the repo so that Heroku knows how to set up your environment. Put the following things in each of the files:</p>
+<h4 id="procfile"><code>Procfile</code></h4>
+<pre><code>web: gunicorn app:app --log-file=-</code></pre>
+<h4 id="runtime.txt"><code>runtime.txt</code></h4>
+<pre><code>python-3.6.0</code></pre>
+<h4 id="requirements.txt"><code>requirements.txt</code></h4>
+<pre><code>Flask==0.12
+gunicorn==19.6.0</code></pre>
+<p>Once the above files have been added to the repository, the last step is to add your code and tell Heroku to run it. In order to add your code, insert it into a file called <code>app.py</code> formatted as the code below is:</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> json
+<span class="im">import</span> requests
+<span class="im">from</span> flask <span class="im">import</span> Flask, request
+
+app <span class="op">=</span> Flask(<span class="va">__name__</span>)
+botId <span class="op">=</span> <span class="st">&quot;&lt;your bot ID here&gt;&quot;</span>
+
+<span class="at">@app.route</span>(<span class="st">&#39;/&#39;</span>, methods<span class="op">=</span>[<span class="st">&#39;POST&#39;</span>])
+<span class="kw">def</span> webhook():
+    msg <span class="op">=</span> request.get_json()
+
+    <span class="co"># Ignore messages sent by the bot</span>
+    <span class="cf">if</span> msg[<span class="st">&quot;sender_type&quot;</span>] <span class="op">!=</span> <span class="st">&quot;bot&quot;</span>:
+        process(msg)
+
+<span class="co"># Insert any helper functions used by the process() function here</span>
+<span class="co"># For example, the send() function:</span>
+<span class="kw">def</span> send(text):
+    data <span class="op">=</span> { <span class="st">&quot;bot_id&quot;</span> : botId, <span class="st">&quot;text&quot;</span> : text }
+    requests.post(<span class="st">&quot;https://api.groupme.com/v3/bots/post&quot;</span>, data<span class="op">=</span>data)
+
+<span class="kw">def</span> process(msg):
+    <span class="co"># Insert your process() function that you wrote as with the test code above</span>
+    <span class="cf">pass</span></code></pre></div>
+<p>Once <code>app.py</code> has been created, it is time to send the code to Heroku to be run. To do this, run the following commands:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="fu">git</span> add .
+<span class="fu">git</span> commit -am <span class="st">&#39;updated code&#39;</span>
+<span class="fu">git</span> push heroku master</code></pre></div>
+<p>The last step when that has been done is to get the address of your Heroku project and set it as the &quot;Callback URL&quot; on the GroupMe Bots page <a href="https://dev.groupme.com/bots">here</a>.</p>
+<p>More information about running a GroupMe Bot (and other code) on Heroku can be found here:</p>
+<ul>
+<li><a href="http://www.apnorton.com/blog/2017/02/28/How-I-wrote-a-Groupme-Chatbot-in-24-hours/">GroupMe Bot Heroku Tutorial</a></li>
+<li><a href="https://devcenter.heroku.com/articles/getting-started-with-python">Getting Started with Heroku</a></li>
+<li><a href="https://scotch.io/tutorials/getting-started-with-flask-a-python-microframework">Getting Started with Flask</a></li>
 </ul>
 <h1 id="ideas">Ideas</h1>
 <p>Now that you have the means to make a chatbot, what can you do with it? Below is a list of some chatbot features that I have personally implemented (or one day hope to add to my chatbots):</p>
