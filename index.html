@@ -377,7 +377,7 @@ groupId <span class="op">=</span> <span class="st">&quot;&lt;your bot&#39;s grou
     <span class="cf">while</span> <span class="va">True</span>:
         getNew(clientId, numCalls)
         numCalls <span class="op">+=</span> <span class="dv">1</span></code></pre></div>
-<p>Note that the code above as a space for you to enter your bot's details. Also note that the only part of the code that actually processes messages is the <code>process</code> function near the bottom of the code file. The rest is responsible for handling the connection to the GroupMe API.</p>
+<p>Note that the code above has a space for you to enter your bot's details. Also note that the only part of the code that actually processes messages is the <code>process</code> function near the bottom of the code file. The rest is responsible for handling the connection to the GroupMe API.</p>
 <p>For your convenience, the code above can be downloaded from <a href="GroupMe.py">here</a>.</p>
 <p>The code above should not be used for complete projects, but should only be used for testing bot functionality before deploying on a server. Likewise for large projects, the code above should be imported as a module and separated from the <code>process</code> function to make the code more readable.</p>
 <p>More information about GroupMe APIs can be found here:</p>
@@ -396,7 +396,13 @@ groupId <span class="op">=</span> <span class="st">&quot;&lt;your bot&#39;s grou
 <li>ngrok (hosting service)</li>
 </ul>
 <h3 id="flask-application">Flask Application</h3>
-<p>Flask is a service (written in python) that runs an application (in this case, the application is our Lil Pump Facebook Page Messenger). In our Flask application we will be handling <em>all</em> of the following: - Receiving messages - Verifying authenticity through tokens - Get user information - Send message to user</p>
+<p>Flask is a service (written in python) that runs an application (in this case, the application is our Lil Pump Facebook Page Messenger). In our Flask application we will be handling <em>all</em> of the following:</p>
+<ul>
+<li>Receiving messages</li>
+<li>Verifying authenticity through tokens</li>
+<li>Get user information</li>
+<li>Send message to user</li>
+</ul>
 <div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="co">#Python libraries that we need to import for our bot</span>
 <span class="im">import</span> random
 <span class="im">from</span> flask <span class="im">import</span> Flask, request

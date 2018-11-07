@@ -378,7 +378,7 @@ if __name__ == "__main__":
         numCalls += 1
 ```
 
-Note that the code above as a space for you to enter your bot's details. Also note that the only part of the code that actually processes messages is the `process` function near the bottom of the code file. The rest is responsible for handling the connection to the GroupMe API.
+Note that the code above has a space for you to enter your bot's details. Also note that the only part of the code that actually processes messages is the `process` function near the bottom of the code file. The rest is responsible for handling the connection to the GroupMe API.
 
 For your convenience, the code above can be downloaded from [here](GroupMe.py).
 
@@ -400,6 +400,7 @@ More information about GroupMe APIs can be found here:
 
 ###Flask Application
 Flask is a service (written in python) that runs an application (in this case, the application is our Lil Pump Facebook Page Messenger). In our Flask application we will be handling *all* of the following:
+
 - Receiving messages
 - Verifying authenticity through tokens
 - Get user information
